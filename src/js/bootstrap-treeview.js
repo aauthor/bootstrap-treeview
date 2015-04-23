@@ -382,7 +382,10 @@
 				.addClass(node.state.selected ? 'node-selected' : '')
 				.addClass(node.searchResult ? 'search-result' : '')
 				.attr('data-nodeid', node.nodeId)
-				.attr('style', _this.buildStyleOverride(node));
+				.attr('style', _this.buildStyleOverride(node))
+				.data('treeview-node', node);
+
+			node.$element = treeItem;
 
 			// Add indent/spacer to mimic tree structure
 			for (var i = 0; i < (level - 1); i++) {
@@ -719,9 +722,9 @@
 			results = this.findNodes(pattern, modifier);
 			$.each(results, function (index, node) {
 				node.searchResult = true;
+				node.$element.addClass('search-result');
 			})
 
-			this.render();
 		}
 
 		this.$element.trigger('searchComplete', $.extend(true, {}, results));
@@ -736,9 +739,8 @@
 
 		var results = $.each(this.findNodes('true', 'g', 'searchResult'), function (index, node) {
 			node.searchResult = false;
+			node.$element.removeClass('search-result');
 		});
-
-		this.render();
 
 		this.$element.trigger('searchCleared', $.extend(true, {}, results));
 	};
